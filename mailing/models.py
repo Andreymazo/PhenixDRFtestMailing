@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 import pytz
@@ -49,26 +50,21 @@ NULLABLE = {'blank': True, 'null': True}
 class Clientt(models.Model):
     TIMEZONES = tuple(zip(pytz.all_timezones, pytz.all_timezones))
 
-    # id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    email = models.EmailField(max_length=100, unique=True)
     phone = PhoneNumberField(unique=True, **NULLABLE)
-    # phone_number = models.CharField(max_length=16, validators=[phone_validator], unique=True, verbose_name='телефон')
-    country_phone_code = models.CharField(default=None, editable=False, max_length=4,
+    country_phone_code = models.CharField(max_length=5,
                                           verbose_name='код мобильного оператора')
     date_joined = models.DateTimeField(default=timezone.now)
-    # client_timezone = TimeZoneField(
-    #     use_pytz=True)  # returns pytz timezone objects#https://github.com/mfogel/django-timezone-field?files=1#  Мешает создавать пользователей поле is not JSON serializable
-    client_timezone = models.CharField(
-        verbose_name="Time zone", max_length=32, choices=TIMEZONES, default="UTC"
-    )
+    client_timezone = models.CharField(verbose_name="Time zone", max_length=32, choices=TIMEZONES, default="UTC")
+    mailing = models.ForeignKey('mailing.Mailing', on_delete=models.CASCADE, related_name='clientt', **NULLABLE)
 
     def save(self, *args, **kwargs):
-        self.country_phone_code = str(self.phone)[1:4]
+        self.country_phone_code = str(self.phone)[2:5]
         return super(Clientt, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Client"
         verbose_name_plural = "Clients"
+
 
 # class Client(models.Model):  # ):AbstractBaseUser, PermissionsMixin
 #
@@ -133,6 +129,8 @@ class Mailing(models.Model):
     message = models.TextField()
     tag = models.CharField(verbose_name='фильтр свойств клиентов, код оператора')
     time_completion = models.DateTimeField(auto_now=True)
+    # client = models.ForeignKey('mailing.Clientt', on_delete=models.CASCADE, related_name='mailing')
+
 
     class Meta:
         verbose_name = "Mailing"
@@ -146,20 +144,19 @@ class Message(models.Model):
         (STATUS_DONE, 'Отправлено'),
         (STATUS_NO_DONE, 'Не отправлено')
     )
-    username = None
-    email = models.EmailField(_('емэйл '), unique=True)
     status = models.BooleanField(choices=STATUSES, verbose_name='Статус сообщения',
                                  default=STATUS_NO_DONE)
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     last_attempt = models.DateTimeField(auto_now=True)
     mailing = models.ForeignKey('mailing.Mailing', on_delete=models.CASCADE, related_name="mess")
-    client = models.ForeignKey('mailing.Client', on_delete=models.CASCADE, related_name="message")
+    client = models.ForeignKey('mailing.Clientt', on_delete=models.CASCADE, related_name="message")
 
     class Meta:
         verbose_name = "Message"
         verbose_name_plural = "Messages"
-#
-# class Mailinglog(models.Model):
-#     mailing = models.CharField(max_length=100, verbose_name='Email')
-#     result = models.CharField(max_length=100, verbose_name='Result')
-#     last_attempt = models.DateTimeField(auto_now=True)
+
+
+class Mailinglog(models.Model):
+    mailing = models.CharField(max_length=100, verbose_name='Email')
+    result = models.CharField(max_length=100, verbose_name='Result')
+    last_attempt = models.DateTimeField(auto_now=True)

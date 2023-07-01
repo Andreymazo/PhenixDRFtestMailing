@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'mailing',
     'django_phonenumbers',
     'rest_framework',
+    'celery',
+    'django_crontab',
+    'django_celery_beat',
 
 ]
 
@@ -168,3 +171,23 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+REDIS_HOST = 'redis'
+REDIS_PORT = '6379'
+# CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+# CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+# CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = "Europe/Moscow"
+
+# CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_TIME_LIMIT = 30 * 60
+CRONJOBS = [
+    # ('*/1 * * * *', 'mailing.management.commands.mailing_sms.send_sms'),
+    ('*/1 * * * *', 'config.cron.send_sms', '>> /home/andrey_mazo/PycharmProjects/PhenixDRFtestMailing/log.log'),
+    # ('*/1 * * * *', 'mailing.cron.send_sms')
+]
+CRONTAB_COMMAND_SUFFIX='2>&1'

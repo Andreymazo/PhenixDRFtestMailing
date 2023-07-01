@@ -1,15 +1,15 @@
 # class ClientList()
 from rest_framework import generics
 
-from mailing.models import Client
+from mailing.models import Clientt
 from mailing.serializers import ClientSerializer
 
 
-class ClientList(generics.ListCreateAPIView):
-    queryset = Client.objects.all()
+class ClienttList(generics.ListCreateAPIView):
+    queryset = Clientt.objects.all()
     serializer_class = ClientSerializer
 
 
-class ClientCreate(generics.CreateAPIView):
-    queryset = Client.objects.all()
+class ClienttCreate(generics.CreateAPIView):
+    queryset = Clientt.objects.all()
     serializer_class = ClientSerializer
