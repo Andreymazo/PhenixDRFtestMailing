@@ -66,71 +66,17 @@ class Clientt(models.Model):
         verbose_name_plural = "Clients"
 
 
-# class Client(models.Model):  # ):AbstractBaseUser, PermissionsMixin
-#
-#     TIMEZONES = tuple(zip(pytz.all_timezones, pytz.all_timezones))
-#
-#     # id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-#     # phone_validator = RegexValidator(r"^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$",
-#     #                                  "The phone number provided is invalid")
-#     email = models.EmailField(max_length=100, unique=True)
-#     # VERIFICATION_TYPE = [
-#     #     ('sms', 'SMS'),
-#     # ]
-#     # phone_number = PhoneNumberField(unique = True)
-#     # verification_method = models.CharField(max_length=10,choices= VERIFICATION_TYPE)
-#     phone = PhoneNumberField(unique=True, **NULLABLE)
-#
-#     # phone_number = models.CharField(max_length=16, validators=[phone_validator], unique=True, verbose_name='телефон')
-#
-#     country_phone_code = models.CharField(default=None, editable=False, max_length=4,
-#                                           verbose_name='код мобильного оператора')
-#
-#     # full_name = models.CharField(max_length=30)
-#     # is_superuser = models.BooleanField(default=False)
-#     # is_staff = models.BooleanField(default=False)
-#     # is_active = models.BooleanField(default=True)
-#     # is_emailed = models.BooleanField(default=False)
-#     # is_phoned = models.BooleanField(default=False)
-#     date_joined = models.DateTimeField(default=timezone.now)
-#
-#     # client_timezone = TimeZoneField(
-#     #     use_pytz=True)  # returns pytz timezone objects#https://github.com/mfogel/django-timezone-field?files=1#  Мешает создавать пользователей поле is not JSON serializable
-#     client_timezone = models.CharField(
-#         verbose_name="Time zone", max_length=32, choices=TIMEZONES, default="UTC"
-#     )
-#
-#     # USERNAME_FIELD = 'email'
-#     # REQUIRED_FIELDS = []
-#     # objects = ClientUserManager()
-#
-#     # def __str__(self):
-#     #     return self.email
-#     #
-#     # @staticmethod
-#     # def has_perm(perm, obj=None, **kwargs):
-#     #     return True
-#     #
-#     # @staticmethod
-#     # def has_module_perms(app_label, **kwargs):
-#     #     return True
-#     def save(self, *args, **kwargs):
-#         self.country_phone_code = str(self.phone)[1:4]
-#         return super(Client, self).save(*args, **kwargs)
-#
-#     class Meta:
-#         verbose_name = "Client"
-#         verbose_name_plural = "Clients"
-
-
 class Mailing(models.Model):
     # id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     last_attempt = models.DateTimeField(auto_now=True)
-    message = models.TextField()
+    message = models.TextField(verbose_name='text')
     tag = models.CharField(verbose_name='фильтр свойств клиентов, код оператора')
     time_completion = models.DateTimeField(auto_now=True)
+
     # client = models.ForeignKey('mailing.Clientt', on_delete=models.CASCADE, related_name='mailing')
 
+    def __str__(self):
+        return f"Mailing {self.pk}"
 
     class Meta:
         verbose_name = "Mailing"
@@ -157,6 +103,25 @@ class Message(models.Model):
 
 
 class Mailinglog(models.Model):
+    mailing = models.CharField(max_length=20, verbose_name='Phone of a client')
+    result = models.CharField(max_length=100, verbose_name='Result')
+    last_attempt = models.DateTimeField(auto_now=True)
+    tag = models.CharField(max_length=3, verbose_name='Code mobile operator')
+
+    def save(self, *args, **kwargs):
+        self.tag = str(self.mailing)[2:5]
+        return super(Mailinglog, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Mailing statistic"
+        verbose_name_plural = "Mailing statistics"
+
+
+class Mailinglog_request(models.Model):
     mailing = models.CharField(max_length=100, verbose_name='Email')
     result = models.CharField(max_length=100, verbose_name='Result')
     last_attempt = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Request statistic"
+        verbose_name_plural = "Request statistics"

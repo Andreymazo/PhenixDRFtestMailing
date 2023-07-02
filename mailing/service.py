@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render
 
 from config import settings
-from mailing.models import Mailinglog, Clientt
+from mailing.models import Mailinglog, Clientt, Mailinglog_request
 import requests
 
 url = '...'
@@ -52,12 +52,12 @@ def send_request(recepient, mssg):  # request,
     print(pag.status_code, pag.content, pag.text, pag.json())
 
 
-def send(user_url):
+def send(user_url, userdata):
     try:
-        res = requests.post(url=url, data=data)
+        res = requests.post(url=user_url, data=userdata)
 
         if res:
-            Mailinglog.objects.create(
+            Mailinglog_request.objects.create(
                 ####Zapisivaem url, resultat otpravki i vremia samo zapisivaetsia#########
                 mailing=user_url,
                 result=res

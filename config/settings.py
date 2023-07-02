@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_crontab',
     'django_celery_beat',
     'django_filters',
+    'drf_yasg',
 
 
 ]
