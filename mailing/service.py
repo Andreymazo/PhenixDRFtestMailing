@@ -32,8 +32,8 @@ def send_request(recepient, mssg):  # request,
         # print('recepient================', recepient2)
         ########################################## Нижние 4 рабочие урлы Megafon #######################################
         # url = f'https://sms.ru/auth/check?api_id={api_id}&json=1'
-    url = f'https://sms.ru/auth/check?login={login}&password={password}&json=1'
-        # url = f'https://sms.ru/sms/send?api_id={api_id}&to={recepient}&msg={mssg}&json=1'
+    # url = f'https://sms.ru/auth/check?login={login}&password={password}&json=1'
+    url = f'https://sms.ru/sms/send?api_id={api_id}&to={recepient}&msg={mssg}&json=1'
 
         # url = f'https://sms.ru/sms/cost?api_id={api_id}&to[79219507391]=hello+world&to[74993221627]=hello+world&json=1'
         ##########################################################################################################
@@ -43,6 +43,12 @@ def send_request(recepient, mssg):  # request,
 
     if pag.status_code == 200:
         print(pag.json())
+        Mailinglog.objects.create(
+            ####Zapisivaem pochtu, resultat otpravki i vremia samo zapisivaetsia#########
+            mailing=recepient,
+            result=pag.status_code
+        )
+
     print(pag.status_code, pag.content, pag.text, pag.json())
 
 
