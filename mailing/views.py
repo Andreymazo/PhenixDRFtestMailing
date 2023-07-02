@@ -55,4 +55,5 @@ class MailinglogList(generics.ListAPIView):
     queryset = Mailinglog.objects.all()
     serializer_class = MailinglogSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['tag']
+    filterset_fields = ['id']
+

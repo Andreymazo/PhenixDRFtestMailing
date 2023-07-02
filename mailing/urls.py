@@ -36,6 +36,8 @@ urlpatterns = [
     path('mailing_update/<int:pk>', MailingUpdate.as_view(), name='mailing_update'),
     path('mailing_destroy/<int:pk>', MailingDestroy.as_view(), name='mailing_destroy'),
     path('mailinglog_lst', MailinglogList.as_view(), name='mailing_destroy'),
+    # path('mailinglog_lst_detailed', MailinglogList.as_view(), name='mailing_destroy'),
+# •получения детальной статистики отправленных сообщений по конкретной рассылке
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
