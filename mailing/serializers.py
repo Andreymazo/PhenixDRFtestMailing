@@ -11,12 +11,11 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 class MailingSerializer(serializers.ModelSerializer):
-    # last_attempt = serializers.ReadOnlyField()
     phone = ClientSerializer(source='clientt', many=False)
 
     class Meta:
         model = Mailing
-        fields = ['message', 'tag', 'last_attempt', 'time_completion', 'phone',]#'__all__'
+        fields = ['message', 'tag', 'last_attempt', 'time_completion', 'phone']
 
 
 class MailinglogSerializer(serializers.ModelSerializer):
