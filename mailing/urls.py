@@ -2,7 +2,7 @@ from django.urls import path
 
 from mailing.apps import MailingConfig
 from mailing.views import ClienttList, ClienttCreate, MailingCreate, MailingList, ClienttUpdate, ClienttDestroy, \
-    MailingUpdate, MailingDestroy, MailinglogList
+    MailingUpdate, MailingDestroy, MailinglogList, MailinglogListDetailed
 from rest_framework import permissions
 from django.urls import path, include, re_path
 from drf_yasg.views import get_schema_view
@@ -36,7 +36,7 @@ urlpatterns = [
     path('mailing_update/<int:pk>', MailingUpdate.as_view(), name='mailing_update'),
     path('mailing_destroy/<int:pk>', MailingDestroy.as_view(), name='mailing_destroy'),
     path('mailinglog_lst', MailinglogList.as_view(), name='mailing_destroy'),
-    # path('mailinglog_lst_detailed', MailinglogList.as_view(), name='mailing_destroy'),
+    path('mailinglog_lst_detailed', MailinglogListDetailed.as_view(), name='mailing_destroy'),
 # •получения детальной статистики отправленных сообщений по конкретной рассылке
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

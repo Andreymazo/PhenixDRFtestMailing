@@ -1,8 +1,11 @@
 # class ClientList()
+from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import get_object_or_404
 
+from mailing.filters import MailinglogFilter
 from mailing.models import Clientt, Mailing, Mailinglog
 from mailing.serializers import ClientSerializer, MailingSerializer, MailinglogSerializer
 
@@ -57,3 +60,10 @@ class MailinglogList(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id']
 
+
+# ModelAdmin.search_fields
+class MailinglogListDetailed(generics.ListAPIView):
+    queryset = Mailinglog.objects.all()
+    serializer_class = MailinglogSerializer
+    filter_backends = (OrderingFilter, SearchFilter,)
+    search_fields = ["mailing", ]
