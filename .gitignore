@@ -2,3 +2,4 @@
 /env/
 __pycache__/
 Trash/
+mailing/service_back.py
